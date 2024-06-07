@@ -25,3 +25,7 @@ Epoch 199: 4 / 4
 ```
 
 The output varies somewhat from run to run, based on how well the network learns from the initial random weights and biases.
+
+## Acknowledgments
+
+- Original neural network example from [Neural Networks and Deep Learning](http://neuralnetworksanddeeplearning.com/) by Michael Nielsen, licensed under [CC BY-NC 3.0](https://creativecommons.org/licenses/by-nc/3.0/deed.en).
