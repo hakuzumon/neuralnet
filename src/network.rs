@@ -64,20 +64,23 @@ impl Network {
     // Stochastic Gradient Descent
     pub fn sgd(&mut self,
                mut training_data: Vec<(DMatrix<f64>, DMatrix<f64>)>,
-               _epochs: usize,
-               _mini_batch_size: usize,
+               epochs: usize,
+               mini_batch_size: usize,
                learning_rate: f64,
                test_data: Option<&Vec<(DMatrix<f64>, usize)>>
     ) {
-        // todo implement epochs and mini_batches
-        training_data.shuffle(&mut thread_rng());
-        
-        let mini_batch = training_data;
-        self.update_mini_batch(&mini_batch, learning_rate);
-        
-        if let Some(td) = test_data {
-            let test_result = self.evaluate(td);
-            println!("Epoch: {} / {}", test_result, td.len());
+        for epoch in 0..epochs {
+            training_data.shuffle(&mut thread_rng());
+            
+            for mini_batch in training_data.chunks(mini_batch_size) {
+                self.update_mini_batch(&mini_batch, learning_rate);
+            }
+            
+            if let Some(td) = test_data {
+                println!("Epoch {}: {} / {}", epoch, self.evaluate(td), training_data.len());
+            } else {
+                println!("Epoch {} complete.", epoch);
+            }
         }
     }
     
