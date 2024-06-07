@@ -23,9 +23,9 @@ fn main() {
         (column(&[1.0, 1.0]), 0),
     ];
     
-    let mut net = Network::new(vec![2, 4, 2]);
+    let mut net = Network::new(vec![2, 16, 2]);
     
-    net.sgd(training_data.clone(), 1, 10, 20.0, Some(&test_data));
+    net.sgd(training_data.clone(), 200, 10, 20.0, Some(&test_data));
 }
 
 fn column(rows: &[f64]) -> DMatrix<f64> {
