@@ -113,7 +113,7 @@ impl Network {
         }
 
         // backward pass
-        let mut delta = self.cost_derivative(activations.last().unwrap(), output)
+        let mut delta = cost_derivative(activations.last().unwrap(), output)
             * zs.last().unwrap().map(sigmoid_prime);
 
         let last_index = self.weights.len() - 1;
@@ -135,10 +135,10 @@ impl Network {
 
         (nabla_b, nabla_w)
     }
+}
 
-    fn cost_derivative(&self, output_activations: &DMatrix<f64>, output: &DMatrix<f64>) -> DMatrix<f64> {
-        output_activations - output
-    }
+fn cost_derivative(output_activations: &DMatrix<f64>, output: &DMatrix<f64>) -> DMatrix<f64> {
+    output_activations - output
 }
 
 // create a new matrix with same dimensions as input initialized as zeroes
