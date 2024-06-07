@@ -114,7 +114,7 @@ impl Network {
 
         // backward pass
         let mut delta = cost_derivative(activations.last().unwrap(), output)
-            * zs.last().unwrap().map(sigmoid_prime);
+            .component_mul(&zs.last().unwrap().map(sigmoid_prime));
 
         let last_index = self.weights.len() - 1;
         nabla_b[last_index] = delta.clone();
