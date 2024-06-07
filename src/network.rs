@@ -2,11 +2,9 @@ use std::fmt::{Display, Formatter};
 use nalgebra::{DMatrix};
 use rand::{random, seq::SliceRandom};
 use rand::thread_rng;
-use crate::math::{sigmoid, sigmoid_prime};
+use crate::math::{argmax, sigmoid, sigmoid_prime};
 
-/**
- Neural network based on http://neuralnetworksanddeeplearning.com/chap1.html
-*/
+/// Neural network based on http://neuralnetworksanddeeplearning.com/chap1.html
 #[allow(dead_code)]
 pub struct Network {
     num_layers: usize,
@@ -50,8 +48,8 @@ impl Network {
         }
     }
     
-    // Return the output of the network if "a" is input.
-    // "a" is a n * 1 matrix.
+    /// Return the output of the network if "a" is input.
+    /// "a" is a n * 1 matrix.
     pub fn feedforward(&self, a: &DMatrix<f64>) -> DMatrix<f64> {
         let iter = self.biases.iter().zip(self.weights.iter());
         let mut x : DMatrix<f64> = a.clone();
@@ -68,13 +66,19 @@ impl Network {
                mut training_data: Vec<(DMatrix<f64>, DMatrix<f64>)>,
                _epochs: usize,
                _mini_batch_size: usize,
-               learning_rate: f64
+               learning_rate: f64,
+               test_data: Option<&Vec<(DMatrix<f64>, usize)>>
     ) {
         // todo implement epochs and mini_batches
         training_data.shuffle(&mut thread_rng());
         
         let mini_batch = training_data;
         self.update_mini_batch(&mini_batch, learning_rate);
+        
+        if let Some(td) = test_data {
+            let test_result = self.evaluate(td);
+            println!("Epoch: {} / {}", test_result, td.len());
+        }
     }
     
     fn update_mini_batch(&mut self, mini_batch: &[(DMatrix<f64>, DMatrix<f64>)], learning_rate: f64) {
@@ -134,6 +138,16 @@ impl Network {
         }
 
         (nabla_b, nabla_w)
+    }
+    
+    /// Return the number of test inputs for which the neural
+    /// network outputs the correct result. Note that the neural
+    /// network's output is assumed to be the index of whichever
+    /// neuron in the final layer has the highest activation.
+    fn evaluate(&self, test_data: &Vec<(DMatrix<f64>, usize)>) -> i32 {
+        test_data.iter().map(|(input, output)|
+            (argmax(&self.feedforward(input)) == *output) as i32
+        ).sum()
     }
 }
 
