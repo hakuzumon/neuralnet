@@ -67,7 +67,7 @@ impl Network {
                epochs: usize,
                mini_batch_size: usize,
                learning_rate: f64,
-               test_data: Option<&Vec<(DMatrix<f64>, usize)>>
+               test_data: Option<&Vec<(DMatrix<f64>, DMatrix<f64>)>>
     ) {
         for epoch in 0..epochs {
             training_data.shuffle(&mut thread_rng());
@@ -77,7 +77,7 @@ impl Network {
             }
             
             if let Some(td) = test_data {
-                println!("Epoch {}: {} / {}", epoch, self.evaluate(td), training_data.len());
+                println!("Epoch {}: {} / {}", epoch, self.evaluate(td), td.len());
             } else {
                 println!("Epoch {} complete.", epoch);
             }
@@ -147,9 +147,19 @@ impl Network {
     /// network outputs the correct result. Note that the neural
     /// network's output is assumed to be the index of whichever
     /// neuron in the final layer has the highest activation.
-    fn evaluate(&self, test_data: &Vec<(DMatrix<f64>, usize)>) -> i32 {
-        test_data.iter().map(|(input, output)|
-            (argmax(&self.feedforward(input)) == *output) as i32
+    fn evaluate(&self, test_data: &Vec<(DMatrix<f64>, DMatrix<f64>)>) -> i32 {
+        test_data.iter().map(|(input, output)| {
+            let result = (&self.feedforward(input)[0] * 200.0) as i32;
+            let expected = (&output[0] * 200.0) as i32;
+            println!("{} {}", result, expected);
+
+            let correct = result == expected;
+            if correct {
+                1
+            } else  {
+                0
+            }
+        }
         ).sum()
     }
 }
