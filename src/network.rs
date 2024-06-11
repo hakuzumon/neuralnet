@@ -77,7 +77,7 @@ impl Network {
             }
             
             if let Some(td) = test_data {
-                println!("Epoch {}: {} / {}", epoch, self.evaluate(td), training_data.len());
+                println!("Epoch {}: {} / {}", epoch, self.evaluate(td), td.len());
             } else {
                 println!("Epoch {} complete.", epoch);
             }
