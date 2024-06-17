@@ -2,6 +2,8 @@
 
 This Rust project is a port of the neural network example from [Chapter 1](http://neuralnetworksanddeeplearning.com/chap1.html) of "Neural Networks and Deep Learning" by Michael Nielsen. Instead of using the MNIST dataset, this implementation uses the XOR function as the training example.
 
+This is mostly a personal Rust exercise, and you probably don't want to use it for anything.
+
 ## Features
 
 - Simple feedforward neural network
